@@ -100,6 +100,14 @@ Scope.prototype.$apply = function (expr) {
 };
 
 Scope.prototype.$evalAsync = function (expr) {
+  var self = this;
+  if (!self.$$phase && !self.$$asyncQueue.length) {
+    setTimeout(function () {
+      if (self.$$asyncQueue.length) {
+        self.$digest();
+      }
+    }, 0);
+  }
   this.$$asyncQueue.push({scope: this, expression: expr});
 };
 
@@ -108,10 +116,10 @@ Scope.prototype.$beginPhase = function (phase) {
     throw this.$$phase + 'already in progress';
   }
   this.$$phase = phase;
-}
+};
 
 Scope.prototype.$clearPhase = function () {
   this.$$phase = null;
-}
+};
 
 module.exports = Scope;
