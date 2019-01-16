@@ -538,7 +538,7 @@ describe('Scope', function () {
       expect(scope.phaseInApplyFunction).toBe('$apply');
 
     });
-    it('schedules a digest in $evalAsync', function () {
+    it('schedules a digest in $evalAsync', function (done) {
       scope.aValue = 'abc';
       scope.counter = 0;
 
