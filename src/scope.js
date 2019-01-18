@@ -6,6 +6,7 @@ function Scope() {
   this.$$watchers = [];
   this.$$lastDirtyWatch = null;
   this.$$asyncQueue = [];
+  this.$$applyAsyncQueue = [];
   this.$$phase = null;
 }
 
@@ -120,6 +121,20 @@ Scope.prototype.$beginPhase = function (phase) {
 
 Scope.prototype.$clearPhase = function () {
   this.$$phase = null;
+};
+
+Scope.prototype.$applyAsync = function (expr) {
+  var self = this;
+  self.$$applyAsyncQueue.push(function () {
+    self.$eval(expr);
+  });
+  setTimeout(function () {
+    self.$apply(function () {
+      while (self.$$applyAsyncQueue.length) {
+        self.$$applyAsyncQueue.shift()();
+      }
+    });
+  }, 0);
 };
 
 module.exports = Scope;
