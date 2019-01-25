@@ -172,4 +172,17 @@ Scope.prototype.$$postDigest = function(fn) {
   this.$$postDigestQueue.push(fn);
 };
 
+Scope.prototype.$watchGroup = function (watchFns, listenerFn) {
+  var self = this;
+  var newValues = new Array(watchFns.length);
+  var oldValues = new Array(watchFns.length);
+  _.forEach(watchFns, function (watchFn, i) {
+    self.$watch(watchFn, function (oldValue, newValue) {
+      newValues[i] = newValue;
+      oldValues[i] = oldValue;
+      listenerFn(newValues, oldValues, self);
+    });
+  });
+};
+
 module.exports = Scope;
