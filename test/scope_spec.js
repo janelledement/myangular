@@ -855,6 +855,19 @@ describe('Scope', function () {
       expect(gotOldValues).toEqual([1, 2]);
 
     });
+
+    it('calls the listener once when the watch array is empty', function () {
+      var gotNewValues, gotOldValues;
+
+      scope.$watchGroup([], function (newValues, oldValues, scope) {
+        gotNewValues = newValues;
+        gotOldValues = oldValues;
+      });
+
+      scope.$digest();
+      expect(gotNewValues).toEqual([]);
+      expect(gotOldValues).toEqual([]);
+    });
     
   });
 
