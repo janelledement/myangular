@@ -868,6 +868,27 @@ describe('Scope', function () {
       expect(gotNewValues).toEqual([]);
       expect(gotOldValues).toEqual([]);
     });
+
+    it('can be deregistered', function () {
+      var counter = 0;
+
+      scope.aValue = 1;
+      scope.anotherValue = 2;
+
+      var destroyGroup = scope.$watchGroup([
+        function (scope) {return scope.aValue;},
+        function (scope) {return scope.anotherValue;}
+      ], function (newValues, oldValues, scope) {
+        counter++;
+      });
+      scope.$digest();
+
+      scope.anotherValue = 3;
+      destroyGroup();
+      scope.$digest();
+
+      expect(counter).toEqual(1);
+    });
     
   });
 
