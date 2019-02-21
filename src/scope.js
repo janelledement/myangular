@@ -168,7 +168,7 @@ Scope.prototype.$$flushApplyAsync = function () {
   this.$$applyAsyncId = null;
 };
 
-Scope.prototype.$$postDigest = function(fn) {
+Scope.prototype.$$postDigest = function (fn) {
   this.$$postDigestQueue.push(fn);
 };
 
@@ -217,6 +217,13 @@ Scope.prototype.$watchGroup = function (watchFns, listenerFn) {
       destroyFunction();
     });
   };
+};
+
+Scope.prototype.$new = function () {
+  var ChildScope = function () {};
+  ChildScope.prototype = this;
+  var child = new ChildScope();
+  return child;
 };
 
 module.exports = Scope;
