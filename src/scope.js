@@ -144,7 +144,7 @@ Scope.prototype.$evalAsync = function (expr) {
   if (!self.$$phase && !self.$$asyncQueue.length) {
     setTimeout(function () {
       if (self.$$asyncQueue.length) {
-        self.$digest();
+        self.$root.$digest();
       }
     }, 0);
   }
