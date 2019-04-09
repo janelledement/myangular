@@ -1127,6 +1127,21 @@ describe('Scope', function () {
       expect(child.aValueWas).toBeUndefined();
     });
 
+    it('digests its isolated children', function () {
+      var parent = new Scope();
+      var child = parent.$new(true);
+
+      child.aValue = 'abc';
+      child.$watch(
+        function (scope) {return scope.aValue;},
+        function (newValue, oldValue, scope) {
+          scope.aValueWas = newValue;
+        }
+      );
+      parent.$digest();
+      expect(child.aValueWas).toBe('abc');
+    });
+
 
 
   });
