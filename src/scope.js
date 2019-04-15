@@ -236,8 +236,9 @@ Scope.prototype.$watchGroup = function (watchFns, listenerFn) {
   };
 };
 
-Scope.prototype.$new = function (isolated) {
+Scope.prototype.$new = function (isolated, parent) {
   var child;
+  parent = parent || this;
   if (isolated) {
     child = new Scope();
     child.$root = this.$root;
@@ -249,7 +250,7 @@ Scope.prototype.$new = function (isolated) {
     ChildScope.prototype = this;
     child = new ChildScope();
   }
-  this.$$children.push(child);
+  parent.$$children.push(child);
   child.$$watchers = [];
   child.$$children = [];
   return child;
