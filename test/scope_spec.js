@@ -1205,7 +1205,20 @@ describe('Scope', function () {
 
       parent.$digest();
       expect(child.didPostDigest).toBe(true);
-  
+    });
+
+    it('executes $applyAsync functions on isolated scopes', function () {
+      var parent = new Scope();
+      var child = parent.$new(true);
+      var applied = false;
+
+      parent.$applyAsync(function () {
+        applied = true;
+      });
+
+      child.$digest();
+
+      expect(applied).toBe(true);
     });
 
 
