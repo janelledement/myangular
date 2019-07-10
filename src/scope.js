@@ -21,7 +21,8 @@ function isArrayLike(obj) {
     return false;
   }
   var length = obj.length;
-  return _.isNumber(length);
+  return length === 0 ||
+  (_.isNumber(length) && length > 0 && (length - 1) in obj);
 }
 
 Scope.prototype.$$areEqual = function (newValue, oldValue, valueEq) {
@@ -281,6 +282,9 @@ Scope.prototype.$watchCollection = function (watchFn, listenerFn) {
   var newValue;
   var oldValue;
   var oldLength;
+  var veryOldValue;
+  var firstRun = true;
+  var trackVeryOldValue = (listenerFn.length > 1);
   var changeCount = 0;
 
   var internalWatchFn = function (scope) {
@@ -346,7 +350,15 @@ Scope.prototype.$watchCollection = function (watchFn, listenerFn) {
     return changeCount;
   };
   var internalListenerFn = function () {
-    listenerFn(oldValue, newValue, self);
+    if (firstRun) {
+      listenerFn(newValue, newValue, self);
+      firstRun = false;
+    } else {
+      listenerFn(newValue, veryOldValue, self);
+    }
+    if (trackVeryOldValue) {
+      veryOldValue = _.clone(newValue);
+    }
   };
 
   return this.$watch(internalWatchFn, internalListenerFn);
