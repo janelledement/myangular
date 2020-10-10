@@ -1,4 +1,5 @@
 'use strict';
+console.log("hello world");
 
 var _ = require('lodash');
 
@@ -23,6 +24,7 @@ function Scope() {
   this.$$children = [];
   this.$$phase = null;
   this.$$applyAsyncId = null;
+  this.$$listeners = {};
 }
 
 Scope.prototype.$beginPhase = function (phase) {
@@ -53,6 +55,7 @@ Scope.prototype.$new = function (isolated, parent) {
   parent.$$children.push(child);
   child.$$watchers = [];
   child.$$children = [];
+  child.$$listeners = {};
   child.$parent = parent;
   return child;
 };
@@ -363,5 +366,14 @@ Scope.prototype.$destroy = function () {
     this.$$watchers = null;
   }
 };
+
+Scope.prototype.$on = function (eventName, listener) {
+  var listeners = this.$$listeners[eventName];
+
+  if (!listeners) {
+    this.$$listeners[eventName] = listeners = [];
+  }
+  listeners.push(listener);
+}
 
 module.exports = Scope;
