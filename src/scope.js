@@ -1,5 +1,5 @@
 'use strict';
-console.log("hello world");
+console.log("Hello, Janelle.");
 
 var _ = require('lodash');
 
